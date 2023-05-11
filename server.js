@@ -35,6 +35,9 @@ app.get('/top_rated', topRated)
 app.get('/upcoming', upcoming)
 app.get('/getMovies', getMovies)
 app.post('/getMovies', addMovies)
+app.put('/UPDATE/:id', updateMovies)
+app.delete('/delete/:id',deletMovie)
+app.get('/getMovie/:id' , getMoviesById)
 
 
 
@@ -91,7 +94,7 @@ function getMovies(req, res) {
 }
 function addMovies(req, res) {
   const addingMovie = req.body
-  const sql = `insert into tabel1 (title,release_date,poster_path,overview,comment) values ( $1,$2,$3,$4,$5)`
+  const sql = `insert into tabel1 (title,release_date,poster_path,overview,comment) values ( $1,$2,$3,$4,$5) returning *`
   const theValues = [addingMovie.title,addingMovie.release_date, addingMovie.poster_path, addingMovie.overview,addingMovie.comment]
   client.query(sql, theValues).then(data => {
     res.json(data.rows)
@@ -100,6 +103,30 @@ function addMovies(req, res) {
   })
 }
 //
+function updateMovies (req,res){
+  const id = req.params.id;
+  const newData= req.body;
+  const sql = `update tabel1 set title=$1, release_date=$2, poster_path=$3,overview=$4,comment=$5 where id=${id} returning *`
+  const newValues = [newData.title ,newData.release_date ,newData.poster_path ,newData.overview ,newData.comment]
+  client.query(sql ,newValues).then(data =>{
+    res.status(202).json(data.rows)
+  })
+}
+
+function deletMovie (req,res){
+  const id = req.params.id
+  const sql =  `delete from tabel1 where id = ${id} `;
+  client.query(sql).then(() =>{
+    res.status(204).send('deleted')
+  })
+}
+function getMoviesById (req,res){
+  const id = req.params.id
+  const sql = `select * from tabel1 where id= ${id}`
+  client.query(sql).then(data =>{
+    res.status(200).json(data.rows)
+  })
+}
 
 app.use(serverError)
 
@@ -110,11 +137,11 @@ function serverError(err, req, res,next) {
     "responseText": `Sorry, something went wrong ${err}`
   })
 }
-app.get('*', pageNotfound)
 
 function favorites(requast, respons) {
   respons.status(201).send('Welcome to Favorite Page')
 }
+app.get('*', pageNotfound)
 
 function mainData(requast, respons) {
   let movies = new Movie(datajson.title, datajson.poster_path, datajson.overview)

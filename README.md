@@ -20,7 +20,9 @@ making a Movie library
 * server.get
 * server.listen
 * Test your server
-*connet the Database to the server
+* connet the Database to the server
+* use CRUD 
+* git the item by params 
 ## Project Features
 * show the trending, and search, and show upcoming, and show the top Rated movies
 *connet the Database to the server and adding the user input to the database 

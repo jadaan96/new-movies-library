@@ -46,6 +46,7 @@ app.get('/getMovie/:id' , getMoviesById)
 async function trending(requast, respons) {
   console.log(Movie.all)
   movies = await axios.get(`https://api.themoviedb.org/3/trending/all/day?api_key=${process.env.API}`)
+  Movie.all =[]
   movies.data.results.map(items =>
     new Movie(items.id, items.title, items.release_date, items.poster_path, items.overview))
   respons.status(200).json(Movie.all)
@@ -143,6 +144,7 @@ function favorites(requast, respons) {
 }
 
 function mainData(requast, respons) {
+  Movie.all =[]
   let movies = new Movie(datajson.title, datajson.poster_path, datajson.overview)
   respons.status(200).json(movies)
   console.log(movies)

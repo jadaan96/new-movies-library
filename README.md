@@ -23,6 +23,10 @@ making a Movie library
 * connet the Database to the server
 * use CRUD 
 * git the item by params 
+* Create update and delete requests
+* Update (UPDATE) a record in the database
+* Delete (Delete) a record from the database
+* Read (SELECT) a record from the database
 ## Project Features
 * show the trending, and search, and show upcoming, and show the top Rated movies
 *connet the Database to the server and adding the user input to the database 

@@ -141,15 +141,15 @@ function serverError(err, req, res,next) {
 function favorites(requast, respons) {
   respons.status(201).send('Welcome to Favorite Page')
 }
-app.get('*', pageNotfound)
 
 function mainData(requast, respons) {
   let movies = new Movie(datajson.title, datajson.poster_path, datajson.overview)
   respons.status(200).json(movies)
   console.log(movies)
-
+  
 }
 
+app.get('*', pageNotfound)
 function pageNotfound(requast, respons) {
   respons.status(404).json({
     'code': 404,

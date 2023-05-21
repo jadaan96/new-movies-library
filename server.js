@@ -190,7 +190,7 @@ function pageNotfound(requast, respons) {
 }
 
 
-function Movie(id, title,release_date, poster_path, overview) {
+function Movie(id, title,poster_path, release_date, overview) {
   this.id = id;
   this.title = title;
   this.release_date = release_date;

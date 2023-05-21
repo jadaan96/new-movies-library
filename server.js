@@ -52,7 +52,7 @@ async function trending(requast, respons) {
   movies = await axios.get(`https://api.themoviedb.org/3/trending/all/day?api_key=${process.env.API}`)
   Movie.all =[]
   movies.data.results.map(items =>
-    new Movie(items.id, items.title, items.release_date, items.poster_path, items.overview))
+    new Movie(items.id, items.title, items.poster_path ,items.release_date, items.overview))
   respons.status(200).json(Movie.all)
 }
 function searchFun(req, res) {
@@ -138,9 +138,9 @@ function addMovieToWeb(req,res){
   const userinput = req.body
   
   console.log(req.body)
- 
+  
 
-  const sql = `insert into movies (title,release_date,poster_path,overview,comment) values ( $1,$2,$3,$4,$5) returning *`
+  const sql = `insert into tabel1 (title,release_date,poster_path,overview,comment) values ( $1,$2,$3,$4,$5) returning *`
   const theValues = [userinput.title,userinput.release_date, userinput.poster_path, userinput.overview,userinput.comment]
   client.query(sql, theValues).then(data => {
     res.json(data.rows)
@@ -150,7 +150,7 @@ function addMovieToWeb(req,res){
   })
 }
 function getMovieFromData (req,res){
-  const sql = `select * from movies`
+  const sql = `select * from tabel1`
   client.query(sql).then(item => {
     res.json(item.rows)
   }).catch(err => {
@@ -190,7 +190,7 @@ function pageNotfound(requast, respons) {
 }
 
 
-function Movie(id, title, poster_path, release_date, overview) {
+function Movie(id, title,release_date, poster_path, overview) {
   this.id = id;
   this.title = title;
   this.poster_path = poster_path;

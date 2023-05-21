@@ -17,7 +17,6 @@ const client = new pg.Client(process.env.DBURL)
 
 app.use(cors());
 app.use(express.json())
-app.use(express.json());
 
 client.connect().then(() => {
   app.listen(PORT, () => {
@@ -25,6 +24,8 @@ client.connect().then(() => {
 
   })
 })
+// const bodyParser = require('body-parser');
+// app.use(bodyParser.json());
 
 app.get('/', mainData)
 app.get('/favorite', favorites)
@@ -38,6 +39,9 @@ app.post('/getMovies', addMovies)
 app.put('/UPDATE/:id', updateMovies)
 app.delete('/delete/:id',deletMovie)
 app.get('/getMovie/:id' , getMoviesById)
+
+app.post('/addMovie',addMovieToWeb)
+app.get('/addMovie',getMovieFromData)
 
 
 
@@ -90,7 +94,8 @@ function getMovies(req, res) {
   client.query(sql).then(item => {
     res.json(item.rows)
   }).catch(err => {
-    serverError(err, req, res,next)
+    console.log(err)
+    serverError(err, req, res)
   })
 }
 function addMovies(req, res) {
@@ -128,6 +133,31 @@ function getMoviesById (req,res){
     res.status(200).json(data.rows)
   })
 }
+
+function addMovieToWeb(req,res){
+  const userinput = req.body
+  
+  console.log(req.body)
+ 
+
+  const sql = `insert into movies (title,release_date,poster_path,overview,comment) values ( $1,$2,$3,$4,$5) returning *`
+  const theValues = [userinput.title,userinput.release_date, userinput.poster_path, userinput.overview,userinput.comment]
+  client.query(sql, theValues).then(data => {
+    res.json(data.rows)
+  }).catch(err => {
+    console.log(err)
+    serverError(err, req, res,next)
+  })
+}
+function getMovieFromData (req,res){
+  const sql = `select * from movies`
+  client.query(sql).then(item => {
+    res.json(item.rows)
+  }).catch(err => {
+    serverError(err, req, res)
+  })
+}
+
 
 app.use(serverError)
 

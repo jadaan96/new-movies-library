@@ -193,8 +193,8 @@ function pageNotfound(requast, respons) {
 function Movie(id, title,release_date, poster_path, overview) {
   this.id = id;
   this.title = title;
-  this.poster_path = poster_path;
   this.release_date = release_date;
+  this.poster_path = poster_path;
   this.overview = overview;
   Movie.all.push(this)
 

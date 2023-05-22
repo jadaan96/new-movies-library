@@ -140,7 +140,6 @@ function getMoviesById (req,res){
 function addMovieToWeb(req,res){
   const userinput = req.body
   
-
   console.log("hello world")
   
   const sql = `insert into web (title,movie_id,release_date,poster_path,overview,comment) values ( $1,$2,$3,$4,$5,$6) returning *`
@@ -150,7 +149,7 @@ function addMovieToWeb(req,res){
     res.json(data.rows)
   }).catch(err => {
     serverError(err, req, res)
-    console.log(data.rows)
+    console.log(err)
   })
 }
 function getMovieFromData (req,res){
@@ -167,7 +166,7 @@ function updateMovieToWeb (req,res){
        const id = req.params.id
        const userInput = req.body
   
-       const sql = `update favorite set comment = $1 where movie_id = $2 returning *`
+       const sql = `update web set comment = $1 where movie_id = $2 returning *`
        const values = [userInput.comment , id]
   
        client.query(sql , values).then(result =>{
@@ -176,7 +175,8 @@ function updateMovieToWeb (req,res){
                  movie: result.rows
             })
        })
-       .catch(err => errorHandler(err,req ,res))}
+       .catch(err => 
+        console.log(err))}
   
 function deleteMovieToWeb (req,res){
   const id = req.params.id

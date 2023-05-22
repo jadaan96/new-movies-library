@@ -176,11 +176,10 @@ function updateMovieToWeb (req,res){
   
 function deleteMovieToWeb (req,res){
   const id = req.params.id
-     const sql = `delete from web where movie_id = ${id} `
-
-     client.query(sql).then(result => {
-          res.status(204).json(result)
-     }).catch(err => serverError(err,req ,res))
+  const sql =  `delete from web where id = ${id} `;
+  client.query(sql).then(() =>{
+    res.status(204).send('deleted')
+  })
 }
 
 app.use(serverError)

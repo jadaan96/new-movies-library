@@ -20,7 +20,7 @@ app.use(express.json())
 
 client.connect().then(() => {
   app.listen(PORT, () => {
-    console.log(`i am ready to gooooooo ${PORT}`)
+    console.log(`i am ready to gooooooo `)
 
   })
 })
@@ -42,6 +42,9 @@ app.get('/getMovie/:id' , getMoviesById)
 
 app.post('/addMovie',addMovieToWeb)
 app.get('/addMovie',getMovieFromData)
+app.put('/addMovie/:id',updateMovieToWeb)
+app.delete('/addMovie/:id',deleteMovieToWeb)
+
 
 
 
@@ -158,6 +161,15 @@ function getMovieFromData (req,res){
   })
 }
 
+function updateMovieToWeb (req,res){
+const id =req.params.id
+const newData= req.body;
+const sql = `update tabel1 set comment=$1 where id=${id} returning *`
+  const newValues = [newData.comment]
+  client.query(sql ,newValues).then(data =>{
+    res.status(202).json(data.rows)
+  })
+}
 
 app.use(serverError)
 

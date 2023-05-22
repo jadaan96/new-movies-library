@@ -42,7 +42,7 @@ app.get('/getMovie/:id' , getMoviesById)
 
 app.post('/addMovie',addMovieToWeb)
 app.get('/addMovie',getMovieFromData)
-app.put('/addMovie/:id',updateMovieToWeb)
+app.put('/addMovie/:id', updateMovieToWeb)
 app.delete('/addMovie/:id',deleteMovieToWeb)
 
 
@@ -111,7 +111,7 @@ function addMovies(req, res) {
     serverError(err, req, res,next)
   })
 }
-//
+
 function updateMovies (req,res){
   const id = req.params.id;
   const newData= req.body;
@@ -144,7 +144,7 @@ function addMovieToWeb(req,res){
   console.log("hello world")
   
   const sql = `insert into web (title,movie_id,release_date,poster_path,overview,comment) values ( $1,$2,$3,$4,$5,$6) returning *`
-  const theValues = [userinput.title,userinput.movie_id,userinput.release_date, userinput.poster_path, userinput.overview,userinput.comment]
+  const theValues = [userinput.title,userinput.id,userinput.release_date, userinput.poster_path, userinput.overview,userinput.comment]
   client.query(sql, theValues).then(data => {
     console.log(err.message)
     res.json(data.rows)
@@ -162,15 +162,22 @@ function getMovieFromData (req,res){
   })
 }
 
+
 function updateMovieToWeb (req,res){
-const id =req.params.id
-const newData= req.body;
-const sql = `update web set title=$1, release_date=$2, poster_path=$3,overview=$4,comment=$5 where movie_id=$6 returning *`
-  const newValues = [newData.title,newData.movie_id,newData.release_date, newData.poster_path, newData.overview,newData.comment,id]
-  client.query(sql ,newValues).then(data =>{
-    res.status(202).json(data.rows)
-  })
-}
+       const id = req.params.id
+       const userInput = req.body
+  
+       const sql = `update favorite set comment = $1 where movie_id = $2 returning *`
+       const values = [userInput.comment , id]
+  
+       client.query(sql , values).then(result =>{
+            res.status(201).json({
+                 code : 201,
+                 movie: result.rows
+            })
+       })
+       .catch(err => errorHandler(err,req ,res))}
+  
 function deleteMovieToWeb (req,res){
   const id = req.params.id
   const sql =  `delete from web where id = ${id} `;

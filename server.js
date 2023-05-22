@@ -163,7 +163,7 @@ function updateMovieToWeb (req,res){
   const id = req.params.id
   const userInput = req.body
 
-  const sql = `update web set comment = $1 where movie_id = $2 returning *`
+  const sql = `update web set comment = $1 where id = $2 returning *`
   const values = [userInput.comment , id]
 
   client.query(sql , values).then(result =>{

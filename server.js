@@ -153,37 +153,45 @@ function addMovieToWeb(req,res){
   })
 }
 function getMovieFromData (req,res){
-  const sql = `select * from web`
-  client.query(sql).then(item => {
-    res.json(item.rows)
-  }).catch(err => {
-    serverError(err, req, res)
-  })
-}
+  sql = `select * from web`;
+     Movie.all = []
+     client.query(sql).then(data => {
+          data.rows.map(item => new Movie(item.movie_id ,item.title ,item.overview ,item.poster_path ,item.release_date ,item.comment ))
+          res.json({
+               status : 200,
+               result : Movie.all
+          })
+     }).catch(err =>{
+      serverError(err, req ,res)
+     })}
 
 
 function updateMovieToWeb (req,res){
-       const id = req.params.id
-       const userInput = req.body
-  
-       const sql = `update web set comment = $1 where movie_id = $2 returning *`
-       const values = [userInput.comment , id]
-  
-       client.query(sql , values).then(result =>{
-            res.status(201).json({
-                 code : 201,
-                 movie: result.rows
-            })
+  const id = req.params.id
+  const userInput = req.body
+
+  const sql = `update web set comment = $1 where movie_id = $2 returning *`
+  const values = [userInput.comment , id]
+
+  client.query(sql , values).then(result =>{
+       res.status(201).json({
+            code : 201,
+            movie: result.rows
        })
-       .catch(err => 
-        console.log(err))}
+  })
+  .catch(err => serverError(err,req ,res))}
+        
+        
+        
+     
   
 function deleteMovieToWeb (req,res){
   const id = req.params.id
-  const sql =  `delete from web where id = ${id} `;
-  client.query(sql).then(() =>{
-    res.status(204).send('deleted')
-  })
+  const sql = `delete from web where movie_id = ${id} `
+
+  client.query(sql).then(result => {
+       res.status(204).json(result)
+  }).catch(err => serverError(err,req , res))
 }
 
 app.use(serverError)
@@ -216,12 +224,13 @@ function pageNotfound(requast, respons) {
 }
 
 
-function Movie(id, title,poster_path, release_date, overview) {
-  this.id = id;
-  this.title = title;
-  this.release_date = release_date;
-  this.poster_path = poster_path;
-  this.overview = overview;
+function Movie(id ,title , overview,poster_path, release_date,comment) {
+  this.id = id ,
+     this.title = title ,
+     this.overview = overview ,
+     this.poster_path = poster_path ,
+     this.release_date = release_date ,
+     this.comment = comment ,
   Movie.all.push(this)
 
 }

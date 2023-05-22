@@ -140,16 +140,16 @@ function getMoviesById (req,res){
 function addMovieToWeb(req,res){
   const userinput = req.body
   
-  console.log(req.body)
+  console.log("hello world")
   
-
-  const sql = `insert into web (title,movie_id,release_date,poster_path,overview,comment) values ( $1,$2,$3,$4,$5) returning *`
+  const sql = `insert into web (title,movie_id,release_date,poster_path,overview,comment) values ( $1,$2,$3,$4,$5,$6) returning *`
   const theValues = [userinput.title,userinput.movie_id,userinput.release_date, userinput.poster_path, userinput.overview,userinput.comment]
   client.query(sql, theValues).then(data => {
+    console.log(data.rows)
     res.json(data.rows)
   }).catch(err => {
-    console.log(err)
-    serverError(err, req, res,next)
+    console.log(err.message)
+    serverError(err, req, res)
   })
 }
 function getMovieFromData (req,res){

@@ -138,32 +138,25 @@ function getMoviesById (req,res){
 }
 
 function addMovieToWeb(req,res){
-  const userinput = req.body
-  
-  console.log("hello world")
-  
-  const sql = `insert into web (title,movie_id,release_date,poster_path,overview,comment) values ( $1,$2,$3,$4,$5,$6) returning *`
-  const theValues = [userinput.title,userinput.id,userinput.release_date, userinput.poster_path, userinput.overview,userinput.comment]
-  client.query(sql, theValues).then(data => {
-    console.log(err.message)
-    res.json(data.rows)
-  }).catch(err => {
-    serverError(err, req, res)
-    console.log(err)
-  })
+  const userInput = req.body
+     console.log(userInput);
+     sql = `insert into web (title , overview , poster_path , release_date , movie_id , comment) values ( $1 ,$2 , $3, $4 , $5 , $6) returning *`
+     let values = [ userInput.title ,userInput.overview ,userInput.poster_path ,userInput.release_date  ,userInput.id , userInput.comment ]
+         client.query(sql , values).then(data =>{
+          res.status(201).json(data.rows)
+     }).catch(err =>{
+          console.log(err);
+          serverError(err, req ,res)   
+     })
 }
 function getMovieFromData (req,res){
-  sql = `select * from web`;
-     Movie.all = []
-     client.query(sql).then(data => {
-          data.rows.map(item => new Movie(item.movie_id ,item.title ,item.overview ,item.poster_path ,item.release_date ,item.comment ))
-          res.json({
-               status : 200,
-               result : Movie.all
-          })
-     }).catch(err =>{
-      serverError(err, req ,res)
-     })}
+  const sql = `select * from web`
+  client.query(sql).then(item => {
+    res.json(item.rows)
+  }).catch(err => {
+    serverError(err, req, res)
+  })
+}
 
 
 function updateMovieToWeb (req,res){
@@ -180,18 +173,14 @@ function updateMovieToWeb (req,res){
        })
   })
   .catch(err => serverError(err,req ,res))}
-        
-        
-        
-     
   
 function deleteMovieToWeb (req,res){
   const id = req.params.id
-  const sql = `delete from web where movie_id = ${id} `
+     const sql = `delete from web where movie_id = ${id} `
 
-  client.query(sql).then(result => {
-       res.status(204).json(result)
-  }).catch(err => serverError(err,req , res))
+     client.query(sql).then(result => {
+          res.status(204).json(result)
+     }).catch(err => serverError(err,req ,res))
 }
 
 app.use(serverError)
@@ -224,13 +213,12 @@ function pageNotfound(requast, respons) {
 }
 
 
-function Movie(id ,title , overview,poster_path, release_date,comment) {
-  this.id = id ,
-     this.title = title ,
-     this.overview = overview ,
-     this.poster_path = poster_path ,
-     this.release_date = release_date ,
-     this.comment = comment ,
+function Movie(id, title,poster_path, release_date, overview) {
+  this.id = id;
+  this.title = title;
+  this.release_date = release_date;
+  this.poster_path = poster_path;
+  this.overview = overview;
   Movie.all.push(this)
 
 }

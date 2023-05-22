@@ -20,7 +20,7 @@ app.use(express.json())
 
 client.connect().then(() => {
   app.listen(PORT, () => {
-    console.log(`i am ready to gooooooo `)
+    console.log(`i am ready to gooooooo ${PORT}`)
 
   })
 })
@@ -143,8 +143,8 @@ function addMovieToWeb(req,res){
   console.log(req.body)
   
 
-  const sql = `insert into tabel1 (title,release_date,poster_path,overview,comment) values ( $1,$2,$3,$4,$5) returning *`
-  const theValues = [userinput.title,userinput.release_date, userinput.poster_path, userinput.overview,userinput.comment]
+  const sql = `insert into web (title,movie_id,release_date,poster_path,overview,comment) values ( $1,$2,$3,$4,$5) returning *`
+  const theValues = [userinput.title,userinput.movie_id,userinput.release_date, userinput.poster_path, userinput.overview,userinput.comment]
   client.query(sql, theValues).then(data => {
     res.json(data.rows)
   }).catch(err => {
@@ -153,7 +153,7 @@ function addMovieToWeb(req,res){
   })
 }
 function getMovieFromData (req,res){
-  const sql = `select * from tabel1`
+  const sql = `select * from web`
   client.query(sql).then(item => {
     res.json(item.rows)
   }).catch(err => {
@@ -164,10 +164,17 @@ function getMovieFromData (req,res){
 function updateMovieToWeb (req,res){
 const id =req.params.id
 const newData= req.body;
-const sql = `update tabel1 set comment=$1 where id=${id} returning *`
+const sql = `update web set comment=$1 where id=${id} returning *`
   const newValues = [newData.comment]
   client.query(sql ,newValues).then(data =>{
     res.status(202).json(data.rows)
+  })
+}
+function deleteMovieToWeb (req,res){
+  const id = req.params.id
+  const sql =  `delete from web where id = ${id} `;
+  client.query(sql).then(() =>{
+    res.status(204).send('deleted')
   })
 }
 

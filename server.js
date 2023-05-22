@@ -165,7 +165,7 @@ function getMovieFromData (req,res){
 function updateMovieToWeb (req,res){
 const id =req.params.id
 const newData= req.body;
-const sql = `update web set title=$1, release_date=$2, poster_path=$3,overview=$4,comment=$5  movie_id=6$ where id=${id} returning *`
+const sql = `update web set title=$1, release_date=$2, poster_path=$3,overview=$4,comment=$5 where movie_id=$6 returning *`
   const newValues = [newData.title,newData.movie_id,newData.release_date, newData.poster_path, newData.overview,newData.comment,id]
   client.query(sql ,newValues).then(data =>{
     res.status(202).json(data.rows)
